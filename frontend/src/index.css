@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.create-post-form {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.post{
+  background: #fff;
+  border: 2px solid #dbdfe4;
+  position: relative;
+  border-radius: 4px;
+  margin: 0 !important;
+  width: 100% !important;
+  height: 75px !important;
+}
+
+.author-category{
+  width: calc(49% - 1px); /* support for Chrome19+ and Safari6+     */
+}
+
+
+.title{
+  margin: 0;
+  width: 100%;
+}
