@@ -1,51 +1,96 @@
+import { combineReducers } from 'redux';
+
 import {
   ADD_POST,
   REMOVE_POST,
   EDIT_POST,
-  UP_VOTE_POST,
-  DOWN_VOTE_POST,
   ADD_COMMENT,
   REMOVE_COMMENT,
   EDIT_COMMENT,
-  UP_VOTE_COMMENT,
-  DOWN_VOTE_COMMENT
+  RECEIVE_CATEGORIES,
 } from '../actions'
 
-function postReducer(state = {}, action){
-  const post = action.post
-  const {id} = post
+const initialPostState = {
 
-  switch(post) {
+}
+
+function posts(state = initialPostState, action) {
+  const post = action.post
+  if(post){
+  var {id} = post
+  var { category } = post
+  }
+  switch(action.type) {
     case ADD_POST:
-      return {..state,
-                [id] : {
-                  post
-                }
-              }
+        return { ...state,
+                    [category]: {...state[category],
+                      [id]: post }
+               }
     case REMOVE_POST:
-      let {id, ...rest} = state;
-      return rest
+      const {id, ...rest} = state[category]
+      return {...state,
+                [category]: rest
+             }
     case EDIT_POST:
-      return {..state,
-                [id] : {
-                  post
-                }
-      }
-    case UP_VOTE_POST:
-      return {..state,
-                [id] : {
-                  post
-                }
-      }
-    case DOWN_VOTE_POST:
-      return {..state,
-              [id] : {
-                post
-              }
-      }
+      return { ...state,
+                [category]: {...state[category],
+                  [id]: post}
+             }
     default:
       return state
   }
 
+}
+
+function comments(state = {}, action){
+const comment = action.comment
+if (comment) {
+  var {id, parentId} = comment
+}
+const post = action.post
+  switch(action.type) {
+    case ADD_COMMENT:
+      return { ...state,
+                [parentId]: { ...state[parentId],
+                  [id]: comment
+                }
+             }
+    case REMOVE_COMMENT:
+      const {id, ...rest} = state[parentId]
+      return {...state,
+                [parentId]: rest
+             }
+    case EDIT_COMMENT:
+      return { ...state,
+                [parentId]:
+                 {...state[parentId],
+                   [id]: comment}
+             }
+    default:
+      return state
+  }
 
 }
+
+
+function categories(state = {}, action){
+  debugger
+const categories = action.categories
+
+const comments = action.comments
+  switch(action.type) {
+    case RECEIVE_CATEGORIES:
+      debugger
+      return { ...state, comments
+             }
+    default:
+      return state
+  }
+
+}
+
+export default combineReducers({
+  posts,
+  comments,
+  categories
+});

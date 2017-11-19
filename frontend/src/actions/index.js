@@ -1,13 +1,23 @@
+import * as API from '../utils/api'
+
 export const ADD_POST = 'ADD_POST'
+export const FETCH_POSTS = 'FETCH_POSTS'
+
 export const REMOVE_POST = 'REMOVE_POST'
 export const EDIT_POST = 'EDIT_POST'
-export const UP_VOTE_POST = 'UP_VOTE_POST'
-export const DOWN_VOTE_POST = 'DOWN_VOTE_POST'
 export const ADD_COMMENT = 'ADD_COMMENT'
 export const REMOVE_COMMENT = 'REMOVE_COMMENT'
 export const EDIT_COMMENT = 'EDIT_COMMENT'
-export const UP_VOTE_COMMENT = 'UP_VOTE_COMMENT'
-export const DOWN_VOTE_COMMENT = 'DOWN_VOTE_COMMENT'
+
+export const RECEIVE_CATEGORIES = "RECEIVE_CATEGORIES";
+
+
+export const getPosts = () => (dispatch, getState) => {
+  dispatch({
+    type: FETCH_POSTS
+  })
+}
+
 
 export function addPost(post) {
   return {
@@ -26,20 +36,6 @@ export function removePost(post){
 export function editPost(post) {
   return {
     type: EDIT_POST,
-    post,
-  }
-}
-
-export function upVotePost(post) {
-  return {
-    type: UP_VOTE_POST,
-    post,
-  }
-}
-
-export function downVotePost(post) {
-  return {
-    type: DOWN_VOTE_POST,
     post,
   }
 }
@@ -65,16 +61,13 @@ export function editComment(comment) {
   }
 }
 
-export function upVoteComment(comment) {
-  return {
-    type: UP_VOTE_COMMENT,
-    comment,
-  }
-}
+export const receiveCategories = categories => ({
+  type: RECEIVE_CATEGORIES,
+  categories
+});
 
-export function downVoteComment(comment) {
-  return {
-    type: DOWN_VOTE_COMMENT,
-    comment,
-  }
-}
+export const fetchCategories = () => dispatch => (
+  API
+      .getCategories()
+      .then(categories => dispatch(receiveCategories(categories)))
+);
