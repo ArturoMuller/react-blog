@@ -1,73 +1,91 @@
 import * as API from '../utils/api'
 
 export const ADD_POST = 'ADD_POST'
-export const FETCH_POSTS = 'FETCH_POSTS'
+export const RECEIVE_POSTS = 'RECEIVE_POSTS'
 
 export const REMOVE_POST = 'REMOVE_POST'
 export const EDIT_POST = 'EDIT_POST'
+export const RECEIVE_COMMENTS = 'RECIEVE_COMMENTS'
 export const ADD_COMMENT = 'ADD_COMMENT'
 export const REMOVE_COMMENT = 'REMOVE_COMMENT'
 export const EDIT_COMMENT = 'EDIT_COMMENT'
 
 export const RECEIVE_CATEGORIES = "RECEIVE_CATEGORIES";
 
+export const CHANGE_CATEGORY = "CHANGE_CATEGORY";
+export const CLEAR_CATEGORY = "CLEAR_CATEGORY";
 
-export const getPosts = () => (dispatch, getState) => {
-  dispatch({
-    type: FETCH_POSTS
+export const fetchPosts = () => (dispatch, getState) => {
+  API.getPosts().then((posts) => {
+    return dispatch({
+      type: RECEIVE_POSTS,
+      payload: posts
+    }
+  )}
+)}
+
+export const addPost = (post) => (dispatch) => {
+  API.createPost(post).then(() => {
+    return dispatch({type: ADD_POST,
+    payload: post,})
   })
 }
 
-
-export function addPost(post) {
-  return {
-    type: ADD_POST,
-    post,
-  }
-}
-
-export function removePost(post){
-  return {
-    type: REMOVE_POST,
-    post,
-  }
+export const removePost = (post) => (dispatch) => {
+  debugger
+  API.removePost(post).then(() => {
+    return dispatch({type: REMOVE_POST,
+        payload: post,})
+  })
 }
 
 export function editPost(post) {
   return {
     type: EDIT_POST,
-    post,
+    payload: post,
   }
 }
+
+export const fetchComments = () => (dispatch, getState) => {
+  API.getComments().then((Comments) => {
+    return dispatch({
+      type: RECEIVE_COMMENTS,
+      payload: Comments
+    }
+  )}
+  )}
+
 
 export function addComment(comment) {
   return {
     type: ADD_COMMENT,
-    comment,
+    payload: comment,
   }
 }
 
 export function removeComment(comment){
   return {
     type: REMOVE_COMMENT,
-    comment,
+    payload: comment,
   }
 }
+
+// export const = editComment = () =>  editComment(comment) {
+//   return {
+//     type: EDIT_COMMENT,
+//     comment,
+//   }
+// }
 
 export function editComment(comment) {
   return {
     type: EDIT_COMMENT,
-    comment,
+    payload: comment,
   }
 }
 
-export const receiveCategories = categories => ({
-  type: RECEIVE_CATEGORIES,
-  categories
-});
-
-export const fetchCategories = () => dispatch => (
-  API
-      .getCategories()
-      .then(categories => dispatch(receiveCategories(categories)))
-);
+export const fetchCategories = () => (dispatch, getState) => {
+  API.getCategories().then((categories) => {
+    return dispatch({ type: RECEIVE_CATEGORIES, payload: categories})}
+  )
+}

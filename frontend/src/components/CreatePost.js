@@ -4,47 +4,39 @@ import v4 from 'uuid'
 import {getCategories} from '../utils/api'
 import {addPost} from '../actions'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom';
 
 
 
 class CreatePost extends Component {
   constructor(props){
     super(props)
-    this.selectDropDown = this.selectDropDown.bind(this)
-  }
-  state = {
-    categories: []
+    this.selectDropDown = this.selectDropDown.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit = (e) => {
-    debugger
     e.preventDefault()
     const values = serealizeForm(e.target, {hash: true})
+    debugger
     values.id = v4()
-
-
-    this.props.store.dispatch(addPost(values))
-    this.category = ''
-    this.author = ''
-    this.title = ''
-    this.body = ''
+    values.timestamp = Date.now();
+    values.voteScore = 0;
+    this.props.createPost(values);
+    this.category.value = ''
+    this.author.value = ''
+    this.title.value = ''
+    this.body.value = ''
     }
 
-  componentDidMount(){
-    const self = this
-    getCategories().then(res => {
-      this.setState({categories : res})
-
-    });
-  }
 
   selectDropDown(){
     return(
-      <div style={{float: 'left', paddingLeft: '20px'}} className={'form-element'}>
+      <div style={{float: 'left', paddingLeft: '20px'}} className={'create-post-form'}>
         <label htmlFor='category'>Category</label>
         <select name={'category'} id='category' ref={input => this.category = input}>
           <option value={1}>Select...</option>
-            {this.state.categories.map((elem, i) =>
+            {this.props.categories.map((elem, i) =>
               <option key={i} value={elem.path}>{elem.name}</option>
             )}
         </select>
@@ -84,25 +76,23 @@ class CreatePost extends Component {
           </div>
         </div>
         </form>
+          <Link to={'/'}> <button >Close</button> </Link>
+
       </div>
     )
   }
 }
 
-export default CreatePost
+const mapStateToProps = (state, props) => ({
+  categories: state.categories,
+});
 
-// const mapStateToProps =  (state, props) => ({
-//   categories: CreatePost.state.categories
-// });
-//
-// function mapDispatchToProps (dispatch) {
-//   return {
-//     selectRecipe: (data) => dispatch(addRecipe(data)),
-//     remove: (data) => dispatch(removeFromCalendar(data))
-//   }
-// }
-//
-//
-// export default connect(
-//   mapStateToProps
-// )(CreatePost)
+function mapDispatchToProps (dispatch, props) {
+  return {
+    createPost: (data) => dispatch(addPost(data)),
+  }
+}
+
+export default connect(
+  mapStateToProps, mapDispatchToProps
+)(CreatePost)

@@ -8,6 +8,8 @@ import {
   REMOVE_COMMENT,
   EDIT_COMMENT,
   RECEIVE_CATEGORIES,
+  RECEIVE_POSTS,
+  RECEIVE_COMMENTS,
 } from '../actions'
 
 const initialPostState = {
@@ -15,27 +17,35 @@ const initialPostState = {
 }
 
 function posts(state = initialPostState, action) {
-  const post = action.post
-  if(post){
-  var {id} = post
-  var { category } = post
-  }
+  const { payload } = action
+
   switch(action.type) {
+    case RECEIVE_POSTS:
+      const postObj = payload.reduce((obj, item) => {
+        obj = {...obj,
+                  [item.category]: {
+                    ...obj[item.category], [item.id]: item
+                  }
+              }
+        return obj
+      }, {});
+      return postObj;
     case ADD_POST:
         return { ...state,
-                    [category]: {...state[category],
-                      [id]: post }
+                    [payload.category]: {...state[payload.category],
+                      [payload.id]: payload }
                }
     case REMOVE_POST:
-      const {id, ...rest} = state[category]
+      const {[payload.id]:id, ...rest} = state[payload.category]
       return {...state,
-                [category]: rest
+                [payload.category]: rest
              }
-    case EDIT_POST:
-      return { ...state,
-                [category]: {...state[category],
-                  [id]: post}
-             }
+    // case EDIT_POST:
+    //   const {, ...rest} = state[payload.category]
+    //   return { ...state,
+    //             [payload.category]: {...state[payload.category],
+    //               [id]: payload}
+    //          }
     default:
       return state
   }
@@ -43,16 +53,25 @@ function posts(state = initialPostState, action) {
 }
 
 function comments(state = {}, action){
-const comment = action.comment
-if (comment) {
-  var {id, parentId} = comment
-}
-const post = action.post
+  const { payload } = action;
+  if(payload){
+    var { id, parentId } = payload;
+  }
   switch(action.type) {
+    case RECEIVE_COMMENTS:
+      const commentsObj = payload.reduce((obj, item) => {
+        obj = {...obj,
+                  [parentId]: {
+                    ...obj[parentId], [item.id]: item
+                  }
+              }
+        return obj
+      }, {});
+     return commentsObj;
     case ADD_COMMENT:
       return { ...state,
                 [parentId]: { ...state[parentId],
-                  [id]: comment
+                  [id]: payload
                 }
              }
     case REMOVE_COMMENT:
@@ -64,7 +83,7 @@ const post = action.post
       return { ...state,
                 [parentId]:
                  {...state[parentId],
-                   [id]: comment}
+                   [id]: payload}
              }
     default:
       return state
@@ -73,20 +92,17 @@ const post = action.post
 }
 
 
-function categories(state = {}, action){
-  debugger
-const categories = action.categories
-
-const comments = action.comments
+function categories(state = [], action){
+const categoriesObj = action.payload
+  if(categoriesObj){
+    var categoriesArray = categoriesObj.categories;
+  }
   switch(action.type) {
     case RECEIVE_CATEGORIES:
-      debugger
-      return { ...state, comments
-             }
+      return  [...state].concat(categoriesArray)
     default:
       return state
   }
-
 }
 
 export default combineReducers({

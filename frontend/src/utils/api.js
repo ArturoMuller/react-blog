@@ -22,7 +22,6 @@ const headers = {
 export const getCategories = () =>
   fetch(`${api}/categories`, { headers })
     .then(res => res.json())
-    .then(data => data.categories)
 
 /**
 * Get all of the posts for a particular category

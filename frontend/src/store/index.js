@@ -1,35 +1,21 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import postReducer from '../reducers/';
+import reducers from '../reducers/';
 
-const store = () => createStore(postReducer, applyMiddleware(thunk));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const logger = store => next => action => {
+  console.group(action.type)
+  console.info('dispatching', action)
+  let result = next(action)
+  console.log('next state', store.getState())
+  console.groupEnd(action.type)
+  return result
+}
+
+
+const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk, logger)));
+
+
+
 
 export default store;
-
-// State shape
-
-// Categories
-// ['a' , 'b', 'c']
-
-// Posts Key is Category
-// {'a': {1 :{id: 1,
-//        timeStamp: '232323',
-//        title: '2323',
-//        body: 'message bla bla bla',
-//        author: 'Arturo',
-//        category: 'a',
-//        voteScore: 2},}
-
-// }
-//
-// Comments Key is Post ID
-// {1: [{id: 1,
-//       parentId: 1,
-//       timeStamp: '2323',
-//       body: 'message bla bla bla',
-//       author: 'Arturo',
-//       voteScore: 1,}]}
-//
-
-//
-// }

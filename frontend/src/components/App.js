@@ -3,74 +3,26 @@ import logo from '../logo.svg';
 import '../App.css';
 import * as forumAPI from '../utils/api'
 import CreatePost from './CreatePost'
-import {addPost, fetchCategories} from '../actions'
+import { addPost } from '../actions'
 import { connect } from 'react-redux'
-
+import { BrowserRouter, Route } from 'react-router-dom'
+import Homepage from './Homepage'
+import { fetchCategories, fetchPosts, fetchComments } from '../actions'
+import ListPosts from './ListPosts';
+import ListCategories from './ListCategories';
+import ViewPost from './ViewPost';
 
 class App extends Component {
 
   state = {
-    comments : []
+    categories: [],
+    posts: [],
   }
 
-
   componentDidMount() {
-    // forumAPI.getCategories().then((data) => {
-    //   // console.group("get categories")
-    //   // console.dir(data)
-    //   // console.groupEnd("get categories")
-    // })
-    //
-    // forumAPI.getCategoryPosts("react").then((data) => {
-    //   // console.group("get Category React Posts")
-    //   // console.dir(data)
-    //   // console.groupEnd("get Category React Posts")
-    // })
-    //
-    // forumAPI.getPosts().then((data) => {
-    //   // console.group("get All Posts")
-    //   // console.dir(data)
-    //   // console.groupEnd("get All Posts")
-    // })
-    //
-    // forumAPI.getPost("8xf0y6ziyjabvozdd253nd").then((data) => {
-    //   // console.group("getPost")
-    //   // console.dir(data)
-    //   // console.groupEnd("getPost")
-    // })
-    //
-    // forumAPI.upVotePost("8xf0y6ziyjabvozdd253nd").then((data) => {
-    //   // console.group("Up Vote")
-    //   // console.dir(data)
-    //   // console.groupEnd("Up Vote")
-    // })
-    //
-    // forumAPI.downVotePost("8xf0y6ziyjabvozdd253nd").then((data) => {
-    //   // console.group("Down Vote")
-    //   // console.dir(data)
-    //   // console.groupEnd("Up Vote")
-    // })
-    //
-    // forumAPI.editPost({id: "8xf0y6ziyjabvozdd253nd",title: 'xxx', body: 'yyy'}).then((data) => {
-    //   // console.group("editPost")
-    //   // console.dir(data)
-    //   // console.groupEnd("editPost")
-    // })
-    //
-    // forumAPI.getComments("8xf0y6ziyjabvozdd253nd").then((data) => {
-    //   // console.group("comments")
-    //   // console.dir(data)
-    //   // console.groupEnd("comments")
-    // })
-
-
-    forumAPI.getCategories().then((data) => {
-
-      // console.group("get categories")
-      // console.dir(data)
-      // console.groupEnd("get categories")
-    })
-
+    this.props.fetchCategories();
+    this.props.fetchPosts();
+    this.props.fetchComments();
   }
 
   createPost(post) {
@@ -83,10 +35,7 @@ class App extends Component {
     })
   }
 
-  componentDidMount() {
 
-     fetchCategories();
-  }
 
   // createPost = () => {
   //   this.props.store.dispatch(addPost({category: 'flo',
@@ -102,29 +51,35 @@ class App extends Component {
   render() {
     const createPost = this.createPost
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p style={{fontSize: '20px'}}>
-          CreatePost NOW: <br/>
-        </p>
+      <BrowserRouter>
         <div>
-          <input
-            type='text'
-            ref={(input) => this.input = input}
-            placeholder='Store Test'/>
-          <button onClick={this.createPost}>Create</button>
+          <ListCategories />
+            <Route exact path="/" component={ListPosts} />
+            <Route path="/categories/:category" component={ListPosts} />
+            <Route path="/createPost" component={Homepage} />
+            <Route path="/category/:category/post/:id" component={ViewPost} />
+
         </div>
-        <p>CREATE POST LATER</p>
-        <CreatePost handleSubmit={createPost}/>
-      </div>
+      </BrowserRouter>
     );
   }
 }
 
-export default connect()(App);
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
+
+function mapDispatchToProps (dispatch) {
+  return {
+    fetchCategories: () => {dispatch(fetchCategories())},
+    fetchPosts: () => {dispatch(fetchPosts())},
+    fetchComments: () => {dispatch(fetchComments())},
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
