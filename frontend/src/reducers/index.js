@@ -18,7 +18,7 @@ const initialPostState = {
 
 function posts(state = initialPostState, action) {
   const { payload } = action
-
+  debugger;
   switch(action.type) {
     case RECEIVE_POSTS:
       const postObj = payload.reduce((obj, item) => {
@@ -40,12 +40,11 @@ function posts(state = initialPostState, action) {
       return {...state,
                 [payload.category]: rest
              }
-    // case EDIT_POST:
-    //   const {, ...rest} = state[payload.category]
-    //   return { ...state,
-    //             [payload.category]: {...state[payload.category],
-    //               [id]: payload}
-    //          }
+    case EDIT_POST:
+      return { ...state,
+                [payload.category]: {...state[payload.category],
+                  [id]: payload}
+             }
     default:
       return state
   }

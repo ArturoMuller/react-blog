@@ -55,7 +55,8 @@ export const createPost = (body) =>
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
-  }).then(res => res.json())
+  }).then(res => {
+    return res.json()})
 
 /**
 * Get the details of a single post.
@@ -97,6 +98,8 @@ export const downVotePost = (id) =>
     body: JSON.stringify({option : 'downVote'})
   }).then(res => res.json())
 
+
+
 /**
 * Edit the details of an existing post.
 * @param {Object} content which includes title and body
@@ -109,8 +112,10 @@ export const editPost = (content) =>
       ...headers,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(content)
-  }).then(res => res.json())
+    body: JSON.stringify(content.body)
+  }).then(res =>
+   res.json()
+ )
 
 /**
 * Sets the deleted flag for a post to 'true'.

@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import Post from './Post'
 import Modal from 'react-modal'
 import CreatePost from './CreatePost'
+import EditPost from './EditPost'
 import { removePost } from '../actions'
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -22,18 +23,15 @@ class ListPosts extends Component {
   }
   state = {
     sortby: DATE,
-    createPostModalOpen: false,
   }
 
-  openCreatePostModal = () => this.setState(() => ({ createPostModalOpen: true }))
-  closeCreatePostModal = () => {
-    this.setState(() => ({ createPostModalOpen: false }))
-  }
 
   render() {
     const {posts, removePost} = this.props;
     const viewCategory = this.props.match.params.category
-    const path = (this.props.match.path === '/createPost'? true: false)
+    const viewId = this.props.match.params.id
+    const create = (this.props.match.path === '/createPost'? true: false)
+    const edit = (this.props.match.path.includes('/editPost')? true: false)
 
     let visiblePosts = []
     const postCategories = (viewCategory? (posts[viewCategory]? [viewCategory] : []) : Object.keys(posts));
@@ -79,10 +77,19 @@ class ListPosts extends Component {
        <Modal
          className='modal'
          overlayClassName='overlay'
-         isOpen={path}
+         isOpen={create}
          contentLabel='Modal'
        >
-         <CreatePost categories={postCategories}/>
+         <CreatePost addPost={true} categories={postCategories}/>
+       </Modal>
+
+       <Modal
+         className='modal'
+         overlayClassName='overlay'
+         isOpen={edit}
+         contentLabel='Modal'
+       >
+         <EditPost category={viewCategory} id={viewId}/>
        </Modal>
 
       </div>

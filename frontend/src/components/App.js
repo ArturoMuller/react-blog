@@ -10,7 +10,7 @@ import Homepage from './Homepage'
 import { fetchCategories, fetchPosts, fetchComments } from '../actions'
 import ListPosts from './ListPosts';
 import ListCategories from './ListCategories';
-import ViewPost from './ViewPost';
+import EditPost from './EditPost';
 
 class App extends Component {
 
@@ -51,14 +51,14 @@ class App extends Component {
   render() {
     const createPost = this.createPost
     return (
-      <BrowserRouter>
+      <BrowserRouter >
         <div>
           <ListCategories />
             <Route exact path="/" component={ListPosts} />
             <Route path="/categories/:category" component={ListPosts} />
+            <Route path="/editPost/category/:category/post/:id" component={Homepage} />
             <Route path="/createPost" component={Homepage} />
-            <Route path="/category/:category/post/:id" component={ViewPost} />
-
+            <Route path="/viewPost/category/:category/post/:id" component={EditPost} />
         </div>
       </BrowserRouter>
     );

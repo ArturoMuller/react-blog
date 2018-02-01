@@ -12,7 +12,7 @@ class Post extends Component {
     return (
       <div style={{paddingLeft: '20px', border: '1px solid black'}} className={'form-element'}>
 
-         <h2>Title: <Link to={`/category/${post.category}/post/${post.id}`}> {post.title}  </Link></h2>
+         <h2>Title: {post.title}  </h2>
 
          <h2>Category: {post.category} </h2>
          <p style={{display: 'inline', marginRight: '10px'}}>Author: {post.author}</p>
@@ -20,6 +20,12 @@ class Post extends Component {
          <p style={{display: 'inline', marginRight: '10px'}}>Vote Score: {post.voteScore} </p>
 
         <button onClick={removePost(post)}>Delete Post</button>
+        <Link to={`editPost/category/${post.category}/post/${post.id}`}>
+          <button>Edit Post</button>
+        </Link>
+        <Link to={`viewPost/category/${post.category}/post/${post.id}`}>
+          <button>View Post</button>
+        </Link>
       </div>
     );
   }

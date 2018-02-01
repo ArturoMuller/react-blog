@@ -25,25 +25,27 @@ export const fetchPosts = () => (dispatch, getState) => {
 )}
 
 export const addPost = (post) => (dispatch) => {
-  API.createPost(post).then(() => {
+  API.createPost(post).then((newPost) => {
+    console.log(newPost)
     return dispatch({type: ADD_POST,
-    payload: post,})
+    payload: newPost,})
   })
 }
 
 export const removePost = (post) => (dispatch) => {
-  debugger
   API.removePost(post).then(() => {
     return dispatch({type: REMOVE_POST,
         payload: post,})
   })
 }
 
-export function editPost(post) {
-  return {
+export const editPost = (post) => (dispatch) => {
+  API.editPost(post).then((post) => {
+  debugger;
+  return dispatch({
     type: EDIT_POST,
-    payload: post,
-  }
+    payload: post,})
+  })
 }
 
 export const fetchComments = () => (dispatch, getState) => {

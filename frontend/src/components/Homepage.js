@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 const Homepage = ({posts, categories}) => {
   return(
     <Aux>
-      <ListCategories />
       <ListPosts />
     </Aux>
   );

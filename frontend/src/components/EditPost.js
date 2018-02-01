@@ -1,80 +1,62 @@
 import React, { Component} from 'react'
 import serealizeForm from 'form-serialize'
 import v4 from 'uuid'
-import {getCategories} from '../utils/api'
-import {addPost} from '../actions'
+import { getCategories } from '../utils/api'
+import { addPost } from '../actions'
 import { connect } from 'react-redux'
+import Post from './Post'
+import Modal from 'react-modal'
+import CreatePost from './CreatePost'
+import { removePost } from '../actions'
+import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import {withRouter} from "react-router-dom";
+import { Redirect } from 'react-router'
+import { editPost } from '../actions'
+const DATE = 'DATE';
+const VOTE = 'VOTE'
 
-class CreatePost extends Component {
+
+class EditPost extends Component {
   constructor(props){
-    super(props)
-    this.selectDropDown = this.selectDropDown.bind(this);
+    super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  state = {
+    sortby: DATE,
+    createPostModalOpen: false,
   }
 
   componentDidMount(){
-    const { author = '', category = '', title = '', body = ''} = (this.props.post? this.props.post : '');
-    this.category.value = category;
-    this.author.value = author;
-    this.title.value = title;
+    const {post: {body, title}} = this.props;
     this.body.value = body;
+    this.title.value = title;
+  }
+
+  openCreatePostModal = () => this.setState(() => ({ createPostModalOpen: true }))
+  closeCreatePostModal = () => {
+    this.setState(() => ({ createPostModalOpen: false }))
   }
 
   handleSubmit = (e) => {
-    e.preventDefault()
-    const values = serealizeForm(e.target, {hash: true})
-    values.id = v4();
-    values.timestamp = Date.now();
-    values.voteScore = 0;
-    this.props.createPost(values);
+    e.preventDefault();
+    const values = serealizeForm(e.target, {hash: true});
+    this.props.editPost({id: this.props.id,body: values});
     this.props.history.push('/');
   }
 
-
-  selectDropDown(category = ''){
-    return(
-      <div
-        style={{float: 'left', paddingLeft: '20px'}}
-        className={'create-post-form'}
-      >
-        <label
-          htmlFor='category'
-        >
-          Category
-        </label>
-        <select
-          name={'category'}
-          id='category'
-          ref={input => this.category = input}
-        >
-          <option>
-            Select...
-          </option>
-            {this.props.categories.map((elem, i) =>
-
-                <option
-                  key={i}
-                  value={elem.path}>
-                  {elem.name}
-                </option>
-            )}
-        </select>
-      </div>
-    )
-  }
-
   render() {
+    const {post: {author, category, body, deleted, title}} = this.props;
+    this.title = title;
+    this.body = body;
     const {selectDropDown} = this;
     const {addPost} = this.props;
-
     return (
       <div>
         <form
           onSubmit={this.handleSubmit}
           className="create-post-form"
         >
+
         <div
           style={{fontSize: '10px'}}
           className="create-post-details"
@@ -91,12 +73,12 @@ class CreatePost extends Component {
             <input
               id='author'
               className="author-post"
-              ref={input => this.author = input}
+              value={author}
               type="text"
-              name="author"
+              readonly
             />
           </div>
-          {selectDropDown()}
+          {/* {selectDropDown()} */}
           <div
             className={'form-element'}
           >
@@ -135,19 +117,21 @@ class CreatePost extends Component {
           </Link>
       </div>
     )
-  }
+   }
 }
-
-const mapStateToProps = (state, props) => ({
-  categories: state.categories,
-});
 
 function mapDispatchToProps (dispatch, props) {
   return {
-    createPost: (data) => dispatch(addPost(data)),
+    editPost: (data) => dispatch(editPost(data)),
   }
 }
 
-export default withRouter(connect(
-  mapStateToProps, mapDispatchToProps
-)(CreatePost))
+
+const mapStateToProps = (state, props) => {
+  const {category, id} = props;
+  return {
+  post: state.posts[category][id],
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditPost));
