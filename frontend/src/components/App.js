@@ -1,23 +1,14 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
+import { BrowserRouter, Route } from 'react-router-dom'
+import PropTypes from 'prop-types';
 import '../App.css';
 import * as forumAPI from '../utils/api'
-import CreatePost from './CreatePost'
-import { addPost } from '../actions'
-import { connect } from 'react-redux'
-import { BrowserRouter, Route } from 'react-router-dom'
 import Homepage from './Homepage'
-import { fetchCategories, fetchPosts, fetchComments } from '../actions'
 import ListPosts from './ListPosts';
 import ListCategories from './ListCategories';
 import EditPost from './EditPost';
 
 class App extends Component {
-
-  state = {
-    categories: [],
-    posts: [],
-  }
 
   componentDidMount() {
     this.props.fetchCategories();
@@ -27,29 +18,11 @@ class App extends Component {
 
   createPost(post) {
     forumAPI.createPost(post).then((data) => {
-      debugger
-      // console.group("New Post")
-      // console.dir(data)
-      // console.groupEnd("New Post")
       this.setState({comments: data});
     })
   }
 
-
-
-  // createPost = () => {
-  //   this.props.store.dispatch(addPost({category: 'flo',
-  //   id: 'lelele', message: this.input.value})
-  //   )
-  //   this.input.value = ''
-  // }
-
-  state = {
-    posts: null
-  }
-
   render() {
-    const createPost = this.createPost
     return (
       <BrowserRouter >
         <div>
@@ -65,21 +38,10 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-  }
+App.propTypes = {
+  fetchCategories: PropTypes.func.isRequired,
+  fetchPosts: PropTypes.func.isRequired,
+  fetchComments: PropTypes.func.isRequired
 }
 
-
-function mapDispatchToProps (dispatch) {
-  return {
-    fetchCategories: () => {dispatch(fetchCategories())},
-    fetchPosts: () => {dispatch(fetchPosts())},
-    fetchComments: () => {dispatch(fetchComments())},
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default App;

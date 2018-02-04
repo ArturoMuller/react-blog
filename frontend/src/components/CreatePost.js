@@ -1,7 +1,6 @@
 import React, { Component} from 'react'
 import serealizeForm from 'form-serialize'
 import v4 from 'uuid'
-import {getCategories} from '../utils/api'
 import {addPost} from '../actions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom';

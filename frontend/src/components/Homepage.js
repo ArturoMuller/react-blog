@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ListPosts from './ListPosts';
-import ListCategories from './ListCategories';
 import Aux from './Aux'
 import { connect } from 'react-redux'
 

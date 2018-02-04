@@ -1,12 +1,6 @@
-import React, { Component} from 'react';
-import serealizeForm from 'form-serialize';
-import v4 from 'uuid';
-import {getCategories} from '../utils/api';
-import {addPost} from '../actions';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-
 
 const ListCategories = ({categories}) => {
   return (
@@ -16,8 +10,8 @@ const ListCategories = ({categories}) => {
         <li key={0}>
           <Link to={'/'}> all </Link>
         </li>
-        {categories.map((elem,i) =>
-          <li key={i}>
+        {categories.map((elem) =>
+          <li key={elem.path}>
             <Link to={`/categories/${elem.path}`}>{elem.name}</Link>
           </li>
         )}
@@ -26,8 +20,9 @@ const ListCategories = ({categories}) => {
   );
 };
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = (state) => {
+  return ({
   categories: state.categories,
-});
+})};
 
 export default connect(mapStateToProps)(ListCategories);

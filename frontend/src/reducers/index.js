@@ -17,8 +17,7 @@ const initialPostState = {
 }
 
 function posts(state = initialPostState, action) {
-  const { payload } = action
-  debugger;
+  const {payload } = action
   switch(action.type) {
     case RECEIVE_POSTS:
       const postObj = payload.reduce((obj, item) => {
@@ -54,7 +53,7 @@ function posts(state = initialPostState, action) {
 function comments(state = {}, action){
   const { payload } = action;
   if(payload){
-    var { id, parentId } = payload;
+    var {parentId } = payload;
   }
   switch(action.type) {
     case RECEIVE_COMMENTS:
@@ -98,7 +97,7 @@ const categoriesObj = action.payload
   }
   switch(action.type) {
     case RECEIVE_CATEGORIES:
-      return  [...state].concat(categoriesArray)
+      return  categoriesArray
     default:
       return state
   }

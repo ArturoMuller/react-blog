@@ -1,29 +1,14 @@
 import React, { Component} from 'react'
 import serealizeForm from 'form-serialize'
-import v4 from 'uuid'
-import { getCategories } from '../utils/api'
-import { addPost } from '../actions'
 import { connect } from 'react-redux'
-import Post from './Post'
-import Modal from 'react-modal'
-import CreatePost from './CreatePost'
-import { removePost } from '../actions'
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { Redirect } from 'react-router'
 import { editPost } from '../actions'
-const DATE = 'DATE';
-const VOTE = 'VOTE'
-
 
 class EditPost extends Component {
   constructor(props){
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  state = {
-    sortby: DATE,
-    createPostModalOpen: false,
   }
 
   componentDidMount(){
@@ -45,10 +30,9 @@ class EditPost extends Component {
   }
 
   render() {
-    const {post: {author, category, body, deleted, title}} = this.props;
+    const {post: {author, body, title}} = this.props;
     this.title = title;
     this.body = body;
-    const {selectDropDown} = this;
     const {addPost} = this.props;
     return (
       <div>
@@ -75,7 +59,7 @@ class EditPost extends Component {
               className="author-post"
               value={author}
               type="text"
-              readonly
+              disabled
             />
           </div>
           {/* {selectDropDown()} */}
@@ -130,7 +114,7 @@ function mapDispatchToProps (dispatch, props) {
 const mapStateToProps = (state, props) => {
   const {category, id} = props;
   return {
-  post: state.posts[category][id],
+    post: state.posts[category][id],
   }
 }
 

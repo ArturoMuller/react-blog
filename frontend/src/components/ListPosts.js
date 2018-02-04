@@ -1,30 +1,36 @@
 import React, { Component} from 'react'
-import serealizeForm from 'form-serialize'
-import v4 from 'uuid'
-import {getCategories} from '../utils/api'
-import {addPost} from '../actions'
 import { connect } from 'react-redux'
-import Post from './Post'
+import Post from './common/PostExcerpt'
 import Modal from 'react-modal'
 import CreatePost from './CreatePost'
 import EditPost from './EditPost'
 import { removePost } from '../actions'
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import {Redirect} from 'react-router'
 
 const DATE = 'DATE';
 const VOTE = 'VOTE'
 
 
 class ListPosts extends Component {
-  constructor(props){
-    super(props)
-  }
+
   state = {
     sortby: DATE,
   }
 
+  reduceAllPosts(posts) {
+    const allCategories = Object.keys(posts);
+    let allPosts = [];
+    allCategories.map((categoryId) =>
+      Object.keys(posts[categoryId]).map((postId) => {
+        let currPost = posts[categoryId][postId];
+        allPosts.push(currPost);
+      }
+
+      )
+    )
+    return allPosts;
+  }
 
   render() {
     const {posts, removePost} = this.props;
@@ -35,14 +41,11 @@ class ListPosts extends Component {
 
     let visiblePosts = []
     const postCategories = (viewCategory? (posts[viewCategory]? [viewCategory] : []) : Object.keys(posts));
-    let postList = postCategories.map(elem => {
-      const postKeys = Object.keys(posts[elem]);
-       visiblePosts = visiblePosts.concat(postKeys.map(post => posts[elem][post]));
-    });
+
+    visiblePosts = (viewCategory? Object.values(posts[viewCategory]) : this.reduceAllPosts(posts))
 
     if(this.state.sortby === VOTE){
       visiblePosts.sort((a, b) => a.voteScore - b.voteScore)
-
     }
     else if(this.state.sortby === DATE){
       visiblePosts.sort((a, b) => a.timestamp - b.timestamp)
