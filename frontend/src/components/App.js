@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import '../App.css';
 import * as forumAPI from '../utils/api'
+import ViewPost from './ViewPost';
 import Homepage from './Homepage'
 import ListPosts from './ListPosts';
 import ListCategories from './ListCategories';
-import EditPost from './EditPost';
+import CategoriesNPosts from './CategoriesNPosts';
 
 class App extends Component {
 
@@ -26,12 +27,10 @@ class App extends Component {
     return (
       <BrowserRouter >
         <div>
-          <ListCategories />
-            <Route exact path="/" component={ListPosts} />
-            <Route path="/categories/:category" component={ListPosts} />
-            <Route path="/editPost/category/:category/post/:id" component={Homepage} />
-            <Route path="/createPost" component={Homepage} />
-            <Route path="/viewPost/category/:category/post/:id" component={EditPost} />
+          <Switch>
+            <Route path="/viewPost/category/:category/post/:id" component={ViewPost} />
+            <Route path="/" component={CategoriesNPosts} />
+          </Switch>Í
         </div>
       </BrowserRouter>
     );

@@ -15,7 +15,7 @@ export const RECEIVE_CATEGORIES = "RECEIVE_CATEGORIES";
 export const CHANGE_CATEGORY = "CHANGE_CATEGORY";
 export const CLEAR_CATEGORY = "CLEAR_CATEGORY";
 
-export const fetchPosts = () => (dispatch, getState) => {
+export const fetchPosts = () => (dispatch) => {
   API.getPosts().then((posts) => {
     return dispatch({
       type: RECEIVE_POSTS,
@@ -26,7 +26,6 @@ export const fetchPosts = () => (dispatch, getState) => {
 
 export const addPost = (post) => (dispatch) => {
   API.createPost(post).then((newPost) => {
-    console.log(newPost)
     return dispatch({type: ADD_POST,
     payload: newPost,})
   })
@@ -41,15 +40,14 @@ export const removePost = (post) => (dispatch) => {
 
 export const editPost = (post) => (dispatch) => {
   API.editPost(post).then((post) => {
-  debugger;
   return dispatch({
     type: EDIT_POST,
     payload: post,})
   })
 }
 
-export const fetchComments = () => (dispatch, getState) => {
-  API.getComments().then((Comments) => {
+export const fetchComments = (postId) => (dispatch) => {
+  API.getComments(postId).then((Comments) => {
     return dispatch({
       type: RECEIVE_COMMENTS,
       payload: Comments
@@ -72,13 +70,6 @@ export function removeComment(comment){
   }
 }
 
-// export const = editComment = () =>  editComment(comment) {
-//   return {
-//     type: EDIT_COMMENT,
-//     comment,
-//   }
-// }
-
 export function editComment(comment) {
   return {
     type: EDIT_COMMENT,
@@ -86,7 +77,7 @@ export function editComment(comment) {
   }
 }
 
-export const fetchCategories = () => (dispatch, getState) => {
+export const fetchCategories = () => (dispatch) => {
   API.getCategories().then((categories) => {
     return dispatch({ type: RECEIVE_CATEGORIES, payload: categories})}
   )

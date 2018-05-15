@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { editPost } from '../actions'
+import PropTypes from 'prop-types';
 
 class EditPost extends Component {
   constructor(props){
@@ -17,15 +18,10 @@ class EditPost extends Component {
     this.title.value = title;
   }
 
-  openCreatePostModal = () => this.setState(() => ({ createPostModalOpen: true }))
-  closeCreatePostModal = () => {
-    this.setState(() => ({ createPostModalOpen: false }))
-  }
-
-  handleSubmit = (e) => {
+  handleSubmit(e) {
     e.preventDefault();
     const values = serealizeForm(e.target, {hash: true});
-    this.props.editPost({id: this.props.id,body: values});
+    this.props.editPost(values);
     this.props.history.push('/');
   }
 
@@ -46,7 +42,6 @@ class EditPost extends Component {
           className="create-post-details"
         >
           <div
-            style={{float: 'left'}}
             className={'form-element'}
           >
             <label
@@ -56,7 +51,7 @@ class EditPost extends Component {
             </label>
             <input
               id='author'
-              className="author-post"
+              className="title"
               value={author}
               type="text"
               disabled
@@ -66,8 +61,14 @@ class EditPost extends Component {
           <div
             className={'form-element'}
           >
+            <label
+              htmlFor="title"
+            >
+              Title
+            </label>
           <input
             ref={input => this.title = input}
+            id='title'
             className="title"
             type="text"
             name="title"
@@ -77,9 +78,15 @@ class EditPost extends Component {
           <div
             className={'form-element'}
           >
+            <label
+              htmlFor="body"
+            >
+              Body
+            </label>
           <textarea
             ref={input => this.body = input}
             className="post"
+            id='body'
             type="text"
             name="body"
             placeholder="body"
@@ -95,7 +102,7 @@ class EditPost extends Component {
         </div>
         </form>
           <Link to={'/'}>
-            <button>
+            <button className={'close'}>
               Close
             </button>
           </Link>
@@ -104,9 +111,13 @@ class EditPost extends Component {
    }
 }
 
-function mapDispatchToProps (dispatch, props) {
+EditPost.propTypes = {
+  editPost: PropTypes.func
+}
+
+function mapDispatchToProps () {
   return {
-    editPost: (data) => dispatch(editPost(data)),
+    editPost: (data) => editPost(data),
   }
 }
 
@@ -114,7 +125,7 @@ function mapDispatchToProps (dispatch, props) {
 const mapStateToProps = (state, props) => {
   const {category, id} = props;
   return {
-    post: state.posts[category][id],
+    post: state.posts[category][id]
   }
 }
 

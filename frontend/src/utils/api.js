@@ -12,7 +12,8 @@ if (!token)
 
 const headers = {
   'Accept': 'application/json',
-  'Authorization': token
+  'Authorization': token,
+  'Content-Type': 'application/json'
 }
 
 /**
@@ -50,10 +51,7 @@ export const getPosts = () =>
 export const createPost = (body) =>
   fetch(`${api}/posts`, {
     method: 'POST',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json'
-    },
+    headers,
     body: JSON.stringify(body)
   }).then(res => {
     return res.json()})
@@ -76,10 +74,7 @@ export const getPost = (id) =>
 export const upVotePost = (id) =>
   fetch(`${api}/posts/${id}`, {
     method: 'POST',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json'
-    },
+    headers,
     body: JSON.stringify({option : 'upVote'})
   }).then(res => res.json())
 
@@ -91,14 +86,9 @@ export const upVotePost = (id) =>
 export const downVotePost = (id) =>
   fetch(`${api}/posts/${id}`, {
     method: 'POST',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json'
-    },
+    headers,
     body: JSON.stringify({option : 'downVote'})
   }).then(res => res.json())
-
-
 
 /**
 * Edit the details of an existing post.
@@ -108,11 +98,8 @@ export const downVotePost = (id) =>
 export const editPost = (content) =>
   fetch(`${api}/posts/${content.id}`, {
     method: 'PUT',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(content.body)
+    headers,
+    body: JSON.stringify(content)
   }).then(res =>
    res.json()
  )
@@ -135,10 +122,8 @@ fetch(`${api}/posts/${post.id}`, { method: 'DELETE', headers })
 * @returns {Array}
 */
 export const getComments = (id) =>
-  fetch(`${api}/posts/${id}/comments`, { headers })
-    .then(res => res.json())
-    .then(data => data)
-
+  fetch(`${api}/posts/${id}/comments`, { method: 'GET', headers })
+  .then(res => res.json())
 /**
 * Add comment to a post.
 * @param {Object} body UUID, timeStamp, body, author, parentID
@@ -147,10 +132,7 @@ export const getComments = (id) =>
 export const createComment = (body) =>
   fetch(`${api}/comments`, {
     method: 'POST',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json'
-    },
+    headers,
     body: JSON.stringify(body)
   }).then(res => res.json())
 

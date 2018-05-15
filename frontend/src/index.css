@@ -33,13 +33,17 @@ body {
 }
 
 .author-category{
-  width: calc(49% - 1px); /* support for Chrome19+ and Safari6+     */
+  width: 100%; /* support for Chrome19+ and Safari6+     */
 }
 
 
 .title{
   margin: 0;
   width: 100%;
+}
+
+.close {
+  margin: 10px;
 }
 
 .form-element {

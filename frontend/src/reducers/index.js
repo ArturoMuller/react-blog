@@ -12,11 +12,7 @@ import {
   RECEIVE_COMMENTS,
 } from '../actions'
 
-const initialPostState = {
-
-}
-
-function posts(state = initialPostState, action) {
+function posts(state = {}, action) {
   const {payload } = action
   switch(action.type) {
     case RECEIVE_POSTS:
@@ -40,9 +36,10 @@ function posts(state = initialPostState, action) {
                 [payload.category]: rest
              }
     case EDIT_POST:
+      debugger;
       return { ...state,
                 [payload.category]: {...state[payload.category],
-                  [id]: payload}
+                  [payload.id]: payload}
              }
     default:
       return state
@@ -52,37 +49,33 @@ function posts(state = initialPostState, action) {
 
 function comments(state = {}, action){
   const { payload } = action;
-  if(payload){
-    var {parentId } = payload;
-  }
   switch(action.type) {
     case RECEIVE_COMMENTS:
-      const commentsObj = payload.reduce((obj, item) => {
-        obj = {...obj,
-                  [parentId]: {
-                    ...obj[parentId], [item.id]: item
-                  }
-              }
-        return obj
-      }, {});
+      const commentsObj = payload.reduce((stateObj, item) => {
+        const {parentId, id} = item;
+        stateObj = {...stateObj,
+          [parentId]: {...stateObj[parentId], [id]: item}
+        }
+        return stateObj
+      }, state);
      return commentsObj;
-    case ADD_COMMENT:
-      return { ...state,
-                [parentId]: { ...state[parentId],
-                  [id]: payload
-                }
-             }
-    case REMOVE_COMMENT:
-      const {id, ...rest} = state[parentId]
-      return {...state,
-                [parentId]: rest
-             }
-    case EDIT_COMMENT:
-      return { ...state,
-                [parentId]:
-                 {...state[parentId],
-                   [id]: payload}
-             }
+    // case ADD_COMMENT:
+    //   return { ...state,
+    //             [parentId]: { ...state[parentId],
+    //               [id]: payload
+    //             }
+    //          }
+    // case REMOVE_COMMENT:
+    //   const {id, ...rest} = state[parentId]
+    //   return {...state,
+    //             [parentId]: rest
+    //          }
+    // case EDIT_COMMENT:
+    //   return { ...state,
+    //             [parentId]:
+    //              {...state[parentId],
+    //                [id]: payload}
+    //          }
     default:
       return state
   }

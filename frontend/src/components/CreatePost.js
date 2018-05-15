@@ -35,8 +35,7 @@ class CreatePost extends Component {
   selectDropDown(category = ''){
     return(
       <div
-        style={{float: 'left', paddingLeft: '20px'}}
-        className={'create-post-form'}
+        className={'form-element'}
       >
         <label
           htmlFor='category'
@@ -46,6 +45,7 @@ class CreatePost extends Component {
         <select
           name={'category'}
           id='category'
+          className='title'
           ref={input => this.category = input}
         >
           <option>
@@ -79,7 +79,6 @@ class CreatePost extends Component {
           className="create-post-details"
         >
           <div
-            style={{float: 'left'}}
             className={'form-element'}
           >
             <label
@@ -89,7 +88,7 @@ class CreatePost extends Component {
             </label>
             <input
               id='author'
-              className="author-post"
+              className="title"
               ref={input => this.author = input}
               type="text"
               name="author"
@@ -99,6 +98,11 @@ class CreatePost extends Component {
           <div
             className={'form-element'}
           >
+          <label
+            htmlFor="title"
+          >
+            Title
+          </label>
           <input
             ref={input => this.title = input}
             className="title"
@@ -110,6 +114,11 @@ class CreatePost extends Component {
           <div
             className={'form-element'}
           >
+            <label
+              htmlFor="body"
+            >
+              Body
+            </label>
           <textarea
             ref={input => this.body = input}
             className="post"
